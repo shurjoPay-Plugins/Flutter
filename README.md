@@ -233,3 +233,7 @@ String? value4;
 
 
 Flutter shurjoPay SDK v2
+
+### Postmane Documentations
+    This document will illustrate the overall request and response flow.
+    URL : https://documenter.getpostman.com/view/6335853/U16dS8ig	

@@ -37,7 +37,7 @@ dependencies:
   connectivity_plus: ^2.1.0
   http: ^0.13.4
   webview_flutter: ^3.0.0
-  shurjopay_sdk: ^1.0.8
+  shurjopay_sdk: ^1.1.3
 
 dev_dependencies:
   flutter_test:

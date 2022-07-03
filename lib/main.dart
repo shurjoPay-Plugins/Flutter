@@ -32,6 +32,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
+  /// shurjoPay SDK declaration.
+  late ShurjopaySdk shurjopaySdk;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,53 +52,97 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
   void onShurjopaySdk(BuildContext context) {
-    // TODO request data model setup
+    /// TODO request data model setup
+    /// RequiredRequestData is user for shurjoPay payment request.
+    RequiredRequestData requiredRequestData = requestData;
+    requiredRequestData.onPrint();
+    /// shurjoPay Response Listener
+    ///
+    /// TODO request response listener setup
+    /// After request in shurjoPay SDK return and respons by this listener.
+    shurjopaySdk = ShurjopaySdk(
+      /// TODO you get success response, if the transection is succefully completed.
+      onSuccess: (BuildContext context, ErrorSuccess errorSuccess) {
+        switch (errorSuccess.esType) {
+          case ESType.INTERNET_SUCCESS:
+            debugPrint(
+                "DEBUG_LOG_PRINT: surjoPay SDK SUCCESS: ${errorSuccess.message}");
+            return;
+          case ESType.SUCCESS:
+            //debugPrint("DEBUG_LOG_PRINT: surjoPay SDK SUCCESS: ${errorSuccess.message}");
+            onTransaction(errorSuccess.transactionInfo);
+            return;
+        }
+        debugPrint(
+            "DEBUG_LOG_PRINT: surjoPay SDK SUCCESS: ${errorSuccess.esType.name}");
+      },
+
+      /// TODO you get failed response, if the transection is failed or canceled.
+      onFailed: (BuildContext context, ErrorSuccess errorSuccess) {
+        switch (errorSuccess.esType) {
+          case ESType.INTERNET_ERROR:
+            debugPrint(
+                "DEBUG_LOG_PRINT: surjoPay SDK ERROR: ${errorSuccess.message}");
+            return;
+          case ESType.HTTP_CANCEL:
+            debugPrint(
+                "DEBUG_LOG_PRINT: surjoPay SDK ERROR: ${errorSuccess.message}");
+            return;
+          case ESType.ERROR:
+            debugPrint(
+                "DEBUG_LOG_PRINT: surjoPay SDK ERROR: ${errorSuccess.message}");
+            return;
+        }
+        debugPrint(
+            "DEBUG_LOG_PRINT: surjoPay SDK ERROR: ${errorSuccess.message}");
+      },
+    );
+    /// TODO payment request setup
+    /// shurjoPay payment request by makePayment method.
+    /// It takes context, sdkType and request data.
+    shurjopaySdk.makePayment(
+      context: context,
+
+      /// TODO live/sandbox request
+      sdkType: AppConstants.SDK_TYPE_SANDBOX,
+      data: requiredRequestData,
+    );
+  }
+
+  void onTransaction(TransactionInfo? transactionInfo) {
+    debugPrint("DEBUG_LOG_PRINT: surjoPay SDK SUCCESS TransactionInfo:");
+    transactionInfo?.onPrint();
+  }
+
+  RequiredRequestData get requestData {
     int orderId = Random().nextInt(1000);
     RequiredRequestData requiredRequestData = RequiredRequestData(
-      username: "username",
-      password: "password",
-      prefix: "prefix",
+      username: "sp_sandbox",
+      password: "pyyk97hu&6u6",
+      prefix: "NOK",
       currency: "BDT",
       amount: 1,
-      orderId: "prefix$orderId",
+      orderId: "NOK$orderId",
       discountAmount: 0,
       discPercent: 0,
       customerName: "customer name",
-      customerPhone: "customerPhone",
+      customerPhone: "01711486915",
       customerEmail: null,
       customerAddress: "customer address",
       customerCity: "customer city",
       customerState: null,
       customerPostcode: null,
       customerCountry: null,
-      returnUrl: "https://www.sandbox.shurjopayment.com/return_url",
-      cancelUrl: "https://www.sandbox.shurjopayment.com/cancel_url",
+      returnUrl: "https://www.sandbox.shurjopayment.com/response",
+      cancelUrl: "https://www.sandbox.shurjopayment.com/response",
       clientIp: "127.0.0.1",
       value1: null,
       value2: null,
       value3: null,
       value4: null,
     );
-    // TODO request response listener setup
-    ShurjopaySdk shurjopaySdk = ShurjopaySdk(
-      onSuccess: (BuildContext context, TransactionInfo transactionInfo) {
-        // TODO you get success response, if the transection is succefully completed.
-        print("DEBUG_LOG_PRINT: onSuccess");
-      },
-      onFailed: (BuildContext context, String message) {
-        // TODO you get failed response, if the transection is failed or canceled.
-        print("DEBUG_LOG_PRINT:onFailed: $message");
-      },
-      onInternetFailed: (BuildContext context, String message) {
-        // TODO you get internet failed message, if the internet is not connected or on internet.
-        print("DEBUG_LOG_PRINT:onInternetFailed: $message");
-      },
-    );
-    // TODO payment request setup
-    shurjopaySdk.makePayment(
-      context:    context,
-      sdkType:    AppConstants.SDK_TYPE_SANDBOX, //TODO live/sandbox request
-      data:       requiredRequestData,
-    );
+    //requiredRequestData = ShurjoPayUser().getSandboxUser();
+    //debugPrint("DEBUG_LOG_PRINT: REQUEST_DATA: ${requiredRequestData}");
+    return requiredRequestData;
   }
 }

@@ -83,12 +83,6 @@ class WebViewContainerState extends State<WebViewContainer> {
         onWillPop: () async {
           String? url = await webViewController.currentUrl();
           //debugPrint("DEBUG_LOG_PRINT:onWillPop: ${url} ${Utility.lineNumber}");
-          /*if(url == "https://github.com/rzrasel") {
-            return true;
-          } else {
-            webViewController.goBack();
-            return false;
-          }*/
           return false;
         },
         child: Scaffold(
@@ -103,20 +97,7 @@ class WebViewContainerState extends State<WebViewContainer> {
               onPageFinished: (String url) {},
               onPageStarted: (String url) {
                 //debugPrint("DEBUG_LOG_PRINT:onPageStarted: ${url}");
-                /*if (url.contains("cancel_url")) {
-                  Navigator.pop(context);
-                  setState(() {
-                    ErrorSuccess errorSuccess = ErrorSuccess(ESType.HTTP_CANCEL, null, "${AppConstants.PAYMENT_CANCELLED} ${Utility.lineNumber}");
-                    onFailed(context, errorSuccess);
-                  });
-                  return;
-                }
-                if (url.contains("return_url") && url.contains("order_id")) {
-                  _verifyPayment(context, sdkType);
-                }*/
                 if (url.contains(requestData.returnUrl.toString()) || url.contains(requestData.cancelUrl.toString())) {
-                  /*debugPrint("DEBUG_LOG_PRINT: url.first: ${requestData.returnUrl}");
-                  debugPrint("DEBUG_LOG_PRINT: url.first(order_id): ${url}");*/
                   _verifyPayment(context, sdkType);
                 }
                 return;

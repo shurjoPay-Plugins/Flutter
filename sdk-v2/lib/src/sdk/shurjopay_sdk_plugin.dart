@@ -60,9 +60,6 @@ class ShurjopaySdkPlugin {
     );
     //
     var url = Uri.parse(ApiClient.getApiClient(_sdkType).getToken());
-    //url = Uri.parse("https://httpbin.org/post");
-    //url = Uri.parse("http://192.168.10.61/plugins.php");
-    //debugPrint("DEBUG_LOG_PRINT_URL:_getToken: ${url.toString()} ${Utility.lineNumber}");
     try {
       final response = await http.post(url, body: {
         "username": _data.username,

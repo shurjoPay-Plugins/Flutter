@@ -38,12 +38,6 @@ class ShurjopaySdk {
 
   ShurjopaySdk({required this.onSuccess, required this.onFailed});
 
-  /*ShurjopaySdk({
-    required this.onSuccess,
-    required this.onFailed,
-    required this.onInternetFailed,
-  });*/
-
   /// platformVersion code block
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod("getPlatformVersion");
